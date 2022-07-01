@@ -1,3 +1,4 @@
+
 // START + DIFFICULTY SELECTION
 const startWrapper = document.getElementById(`startWrapper`);
 const difficultySelectForm = document.getElementById(`difficultySelect`);
@@ -20,6 +21,7 @@ let canvas = document.getElementById(`hangmanCanvas`);
 
 // The following Try-Catch Block will catch the errors thrown
 try {
+  var game = new Hangman(canvas)
   // Instantiate a game Object using the Hangman class.
 
   // add a submit Event Listener for the to the difficultySelectionForm
@@ -29,7 +31,22 @@ try {
   //       2. show the gameWrapper
   //       3. call the game getWordHolderText and set it to the wordHolderText
   //       4. call the game getGuessessText and set it to the guessesText
-  difficultySelectForm.addEventListener(`submit`, function (event) {});
+  difficultySelectForm.addEventListener(`submit`, function (event) {
+    event.preventDefault()
+    var difficulty = difficultySelect[difficultySelect.selectedIndex].value
+    //alert(`You selected: ${difficulty}`);
+    game.start(difficulty, ()=>{
+      startWrapper.style.display = 'none'
+      resetGame.style.display = 'none'
+      gameWrapper.style.display = 'block'
+      guessInput.style.display = 'block'
+      guessForm.style.display = 'block'
+      wordHolderText.innerHTML = game.getWordHolderText()
+      guessesText.innerHTML = game.getGuessesText()
+      
+      
+    })
+  });
 
   // add a submit Event Listener to the guessForm
   //    get the guess input
@@ -44,12 +61,37 @@ try {
   //      2. disable the guessButton
   //      3. show the resetGame button
   // if the game is won or lost, show an alert.
-  guessForm.addEventListener(`submit`, function (e) {});
+  guessForm.addEventListener(`submit`, function (e) {
+    e.preventDefault()
+    var myGuess = guessInput.value
+    game.guess(myGuess)
+    wordHolderText.innerHTML = game.getWordHolderText()
+    guessesText.innerHTML = game.getGuessesText()
+    guessInput.value = ''
+    //alert(myGuess)
+    
+    if(game.isOver == true){
+      guessInput.style.display = 'none'
+      guessForm.style.display = 'none'
+      resetGame.style.display = 'block'
+      alert((game.didWin) ? 'You Won!' : 'You Lost')
+
+    }
+   
+  });
 
   // add a click Event Listener to the resetGame button
   //    show the startWrapper
   //    hide the gameWrapper
-  resetGame.addEventListener(`click`, function (e) {});
+  resetGame.addEventListener(`click`, function (e) {
+    e.preventDefault()
+    startWrapper.style.display = 'block'
+    gameWrapper.style.display = 'none'
+    guessesText.innerHTML=''
+    wordHolderText.innerHTML=''
+    game = new Hangman(canvas)
+    
+  });
 } catch (error) {
   console.error(error);
   alert(error);
