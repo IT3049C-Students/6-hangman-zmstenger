@@ -37,9 +37,14 @@ try {
     //alert(`You selected: ${difficulty}`);
     game.start(difficulty, ()=>{
       startWrapper.style.display = 'none'
+      resetGame.style.display = 'none'
       gameWrapper.style.display = 'block'
+      guessInput.style.display = 'block'
+      guessForm.style.display = 'block'
       wordHolderText.innerHTML = game.getWordHolderText()
       guessesText.innerHTML = game.getGuessesText()
+      
+      
     })
   });
 
@@ -79,8 +84,13 @@ try {
   //    show the startWrapper
   //    hide the gameWrapper
   resetGame.addEventListener(`click`, function (e) {
+    e.preventDefault()
     startWrapper.style.display = 'block'
     gameWrapper.style.display = 'none'
+    guessesText.innerHTML=''
+    wordHolderText.innerHTML=''
+    game = new Hangman(canvas)
+    
   });
 } catch (error) {
   console.error(error);
